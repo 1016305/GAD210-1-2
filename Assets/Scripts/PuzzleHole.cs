@@ -13,10 +13,12 @@ public class PuzzleHole : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
+        
         if (collision.gameObject.GetComponent<PuzzleObject>().GetShapeID() == solutionID)
         {
             collision.gameObject.GetComponent<PuzzleObject>().SetGrabbale();
             cam.GetComponent<CheckForSolution>().AddSuccess();
+            
         }
     }
 }

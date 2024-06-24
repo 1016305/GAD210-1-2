@@ -6,47 +6,76 @@ using UnityEngine;
 
 public class ColorCombiner : MonoBehaviour
 {
-    [SerializeField] GameObject[] coloursToCombine = new GameObject[2];
-    [SerializeField] UnityEngine.Object shapePrefab;
-    Material material;
-    Material orangeMaterial;
-    Material purpleMaterial;
-    Material greenMaterial;
-
-    GameObject newShape;
+    Material[,] intArray = new Material[3, 3];
+    GameObject[] CubesIn = new GameObject[2];
+    [SerializeField] UnityEngine.Object CubeShape;
+    [SerializeField] Material[] materialArray = new Material[6];
+    private void Start()
+    {
+        InitializeArray();
+    }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (coloursToCombine[0] == null)
+        ReturnMaterial(other.gameObject);
+    }
+    void ReturnMaterial(GameObject cube)
+    {
+        if (CubesIn[0] == null)
         {
-            coloursToCombine[0] = other.gameObject;
-            coloursToCombine[1] = null;
+            CubesIn[0] = cube;
+            Debug.Log("Cube 1 is in");
         }
-        else if (coloursToCombine[0] != null)
+        else if (CubesIn[1] == null)
         {
-            coloursToCombine[1] = other.gameObject;
+            CubesIn[1] = cube;
+            Debug.Log("Cube 2 is in");
+            if (CubesIn[1] != null && CubesIn[0] != null)
+            {
+                int x = CubesIn[0].GetComponent<PuzzleObject>().GetShapeID();
+                int y = CubesIn[1].GetComponent<PuzzleObject>().GetShapeID();
+                Debug.Log(intArray[x, y].name);
+                CreateObjectWithMaterial(intArray[x, y]);
+                ResetObject(x, y);
+            }
         }
+    }
+    void InitializeArray()
+    {
+        intArray[0, 0] = materialArray[0];
+        intArray[0, 1] = materialArray[4];
+        intArray[0, 2] = materialArray[5];
 
-        if (coloursToCombine[0] != null && coloursToCombine[1] != null)
-        {
-            char firstInt = coloursToCombine[0].GetComponent<Renderer>().material.name[0];
-            string firstinter = firstInt.ToString();
-            char secondInt = coloursToCombine[1].GetComponent<Renderer>().material.name[0];
-            string secondinter = secondInt.ToString();
-            Debug.Log(Convert.ToInt32(firstinter));
-            Debug.Log(Convert.ToInt32(secondinter));
-            Debug.Log(Convert.ToInt32(firstinter) + "" + Convert.ToInt32(secondinter));
+        intArray[1, 0] = materialArray[4];
+        intArray[1, 1] = materialArray[1];
+        intArray[1, 2] = materialArray[3];
 
-            newShape = Instantiate(shapePrefab, Vector3.zero, Quaternion.identity) as GameObject;
-            //Debug.Log("Assets/Materials/" + Convert.ToInt32(firstinter) + Convert.ToInt32(secondinter) + ".mat");
-            string fileToLoad = "Assets/Materials/" + Convert.ToInt32(firstinter) + Convert.ToInt32(secondinter) + ".mat";
-            Debug.Log(fileToLoad);
-            material = Resources.Load<Material>(fileToLoad);
-            //newShape.AddComponent<Material>();
-            newShape.GetComponent<Renderer>().material = material;
+        intArray[2, 0] = materialArray[5];
+        intArray[2, 1] = materialArray[3];
+        intArray[2, 2] = materialArray[2];
+    }
+    void CreateObjectWithMaterial(Material newMat)
+    {
+        GameObject newCube;
+        newCube = Instantiate(CubeShape) as GameObject;
+        newCube.GetComponent<Renderer>().material = newMat;
+        Debug.Log(newMat);
+        newCube.GetComponent<PuzzleObject>().SetShapeID(Array.IndexOf(materialArray, newMat));
+    }
+    void ResetObject(int x, int y)
+    {
+        GameObject newCube1;
+        GameObject newCube2;
+        newCube1 = Instantiate(CubeShape, new Vector3(-2,0,0), Quaternion.identity) as GameObject;
+        newCube1.GetComponent<Renderer>().material = materialArray[x];
+        newCube1.GetComponent<PuzzleObject>().SetShapeID(x);
+        newCube2 = Instantiate(CubeShape, new Vector3(2, 0, 0), Quaternion.identity) as GameObject;
+        newCube2.GetComponent<Renderer>().material = materialArray[y];
+        newCube1.GetComponent<PuzzleObject>().SetShapeID(y);
 
-            Destroy(coloursToCombine[0]);
-            Destroy(coloursToCombine[1]);
-        }
+        Destroy(CubesIn[0]);
+        Destroy(CubesIn[1]);
+        CubesIn[0] = null;
+        CubesIn[1] = null;
     }
 }

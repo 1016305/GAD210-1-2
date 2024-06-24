@@ -11,6 +11,7 @@ public class CheckForSolution : MonoBehaviour
     {
         success.Add(true);
         CheckSuccess();
+
     }
     private void CheckSuccess()
     {

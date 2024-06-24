@@ -6,9 +6,11 @@ using UnityEngine;
 public class PuzzleObject : MonoBehaviour
 {
     
-    public enum shape {circle, square, triangle}
+    public enum Shape {circle, square, triangle}
+    public enum ComplexShape { sphere, cone, cylinder, cube, prism, pyramid}
     [SerializeField] private bool grabbable = true;
-    [SerializeField] private shape sh;
+    [SerializeField] private Shape sh;
+    [SerializeField] private ComplexShape csh;
     [SerializeField] int shapeID;
     public int GetShapeID()
     {
@@ -22,8 +24,17 @@ public class PuzzleObject : MonoBehaviour
     {
         return grabbable;
     }
-    public shape GetShape()
+    public Shape GetShape()
     {
         return sh;
     }
+    public void SetShapeID(int x)
+    {
+        shapeID = x;
+    }
+    public void SetComplexShapeEnum(ComplexShape e)
+    {
+        csh = e;
+    }
+
 }
