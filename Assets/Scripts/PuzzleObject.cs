@@ -15,9 +15,9 @@ public class PuzzleObject : MonoBehaviour
     {
         return shapeID;
     }
-    public void SetGrabbale()
+    public void SetGrabbale(bool grab)
     {
-        grabbable = false;
+        grabbable = grab;
     }
     public bool GetGrabbale()
     {

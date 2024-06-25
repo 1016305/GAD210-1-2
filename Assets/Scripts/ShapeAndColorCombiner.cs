@@ -7,10 +7,11 @@ using UnityEngine.UIElements;
 public class ShapeAndColorCombiner : MonoBehaviour
 {
     Material[,] intArray = new Material[3, 3];
+    public bool isBothColorAndShape;
     [SerializeField] Material[] materialArray = new Material[6];
-    GameObject[] shapesIn = new GameObject[2];
+    public GameObject[] shapesIn = new GameObject[2];
     [SerializeField] UnityEngine.Object[] allShapes = new GameObject[6];
-    string[,] outShapes = new string[3, 3];
+    UnityEngine.Object[,] outShapes = new UnityEngine.Object[3, 3];
     //dictionary converts complexshape to object
     //Guide for shapes!
 
@@ -36,37 +37,33 @@ public class ShapeAndColorCombiner : MonoBehaviour
     private void Start()
     {
         LoadShapesArray();
-
+        LoadColoursArray();
         shapeTable.Add(PuzzleObject.Shape.circle, 0);
         shapeTable.Add(PuzzleObject.Shape.square, 1);
         shapeTable.Add(PuzzleObject.Shape.triangle, 2);
 
     }
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider collision)
     {
         if (CheckForShapes(collision.gameObject))
         {
             ShapeLookUp(shapesIn[0].GetComponent<PuzzleObject>().GetShape(), shapesIn[1].GetComponent<PuzzleObject>().GetShape());
+            ReloadShapes();
         }
     }
     void LoadShapesArray()
     {
-        outShapes[0, 0] = "sphere";
-        outShapes[0, 1] = "cylinder";
-        outShapes[0, 2] = "cone";
+        outShapes[0, 0] = allShapes[0];
+        outShapes[0, 1] = allShapes[4];
+        outShapes[0, 2] = allShapes[5];
 
-        outShapes[1, 0] = "cylinder";
-        outShapes[1, 1] = "cube";
-        outShapes[1, 2] = "prism";
+        outShapes[1, 0] = allShapes[4];
+        outShapes[1, 1] = allShapes[1];
+        outShapes[1, 2] = allShapes[3];
 
-        outShapes[2, 0] = "cone";
-        outShapes[2, 1] = "prism";
-        outShapes[2, 2] = "pyramid";
-
-        //get the shape enum from the input shape
-        //dictionary labels enum as int
-        //int checks the table
-        //table identifies the correct complex shape?
+        outShapes[2, 0] = allShapes[5];
+        outShapes[2, 1] = allShapes[3];
+        outShapes[2, 2] = allShapes[2];
     }
     void LoadColoursArray()
     {
@@ -84,27 +81,73 @@ public class ShapeAndColorCombiner : MonoBehaviour
     }
     bool CheckForShapes(GameObject shapeIn)
     {
-        if (shapesIn[0] == null)
+        if (shapeIn.GetComponent<PuzzleObject>().isComplex == true)
         {
-            shapesIn[0] = shapeIn;
             return false;
         }
-        else if (shapesIn[1] == null)
+        else
         {
-            shapesIn[1] = shapeIn;
-            return true;
+            if (shapesIn[0] == null)
+            {
+                shapesIn[0] = shapeIn;
+                shapeIn.GetComponent<PuzzleObject>().SetGrabbale(false);
+                return false;
+            }
+            else if (shapesIn[1] == null)
+            {
+                shapesIn[1] = shapeIn;
+                shapeIn.GetComponent<PuzzleObject>().SetGrabbale(false);
+                
+                return true;
+            }
+            else return false;
         }
-        else return false;
     }
     void ShapeLookUp(PuzzleObject.Shape shape1, PuzzleObject.Shape shape2)
     {
         // Take in shape enum
         int x;
         int y;
-        shapeTable.TryGetValue(shape1, out x);
-        shapeTable.TryGetValue(shape2, out y);
-        // lookup index of shape
-        // use that number as the index to pull a string
-        Debug.Log(outShapes[x, y]);
+        int colorX;
+        int colorY;
+
+        if (!isBothColorAndShape)
+        {
+            GameObject newShape;
+
+            shapeTable.TryGetValue(shape1, out x);
+            shapeTable.TryGetValue(shape2, out y);
+            newShape = Instantiate(outShapes[x, y]) as GameObject;
+            newShape.GetComponent<MeshCollider>().convex = true;
+        }
+        else if (isBothColorAndShape)
+        {
+            GameObject newShape;
+            Material newMat;
+
+            colorX = shapesIn[0].GetComponent<PuzzleObject>().GetShapeID();
+            colorY = shapesIn[0].GetComponent<PuzzleObject>().GetShapeID();
+            newMat = intArray[colorX, colorY];
+            shapeTable.TryGetValue(shape1, out x);
+            shapeTable.TryGetValue(shape2, out y);
+            newShape = Instantiate(outShapes[x, y]) as GameObject;
+            newShape.GetComponent<MeshCollider>().convex = true;
+            newShape.GetComponent<Renderer>().material = newMat;
+        }
+    }
+    void ReloadShapes()
+    {
+        GameObject reloadShape1;
+        GameObject reloadShape2;
+        Destroy(shapesIn[0]);
+        Destroy(shapesIn[1]);
+        reloadShape1 = Instantiate(shapesIn[0], new Vector3(-3.5f, 0f, 0f), Quaternion.identity);
+        reloadShape2 = Instantiate(shapesIn[1], new Vector3(3.5f, 0f, 0f), Quaternion.identity);
+        reloadShape1.GetComponent<PuzzleObject>().SetGrabbale(true);
+        reloadShape2.GetComponent<PuzzleObject>().SetGrabbale(true);
+        reloadShape1.transform.rotation = Quaternion.Euler(90f, 0, 0);
+        reloadShape2.transform.rotation = Quaternion.Euler(90f, 0, 0);
+        shapesIn[0] = null;
+        shapesIn[1] = null;
     }
 }

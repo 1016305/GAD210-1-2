@@ -5,7 +5,7 @@ using UnityEngine;
 public class PhysicsMove : MonoBehaviour
 {
     [SerializeField] private GameObject nullGrab;
-    private GameObject PO;
+    [SerializeField] GameObject PO;
     // Start is called before the first frame update
     void Start()
     {
@@ -51,6 +51,12 @@ public class PhysicsMove : MonoBehaviour
                 PO.GetComponent<Rigidbody>().useGravity = true;
                 PO.transform.parent = null;
             }
+        }
+        if (!Input.GetMouseButton(0))
+        {
+            PO.transform.parent = null;
+            PO = null;
+
         }
     }
     void NullObjectToMousePos()

@@ -5,20 +5,24 @@ using UnityEngine;
 public class PuzzleHole : MonoBehaviour
 {
     [SerializeField] private int solutionID;
+    bool isHit = false;
     Camera cam;
     // Start is called before the first frame update
     private void Start()
     {
         cam = Camera.main;
     }
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider collision)
     {
-        
-        if (collision.gameObject.GetComponent<PuzzleObject>().GetShapeID() == solutionID)
+        if (!isHit)
         {
-            collision.gameObject.GetComponent<PuzzleObject>().SetGrabbale();
-            cam.GetComponent<CheckForSolution>().AddSuccess();
-            
+            if (collision.gameObject.GetComponent<PuzzleObject>().GetShapeID() == solutionID)
+            {
+                collision.gameObject.GetComponent<PuzzleObject>().SetGrabbale(false);
+                cam.GetComponent<CheckForSolution>().AddSuccess();
+                isHit = true;
+
+            }
         }
     }
 }
