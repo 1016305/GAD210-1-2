@@ -5,13 +5,12 @@ using UnityEngine;
 [RequireComponent(typeof(Material))]
 public class PuzzleObject : MonoBehaviour
 {
-    
+    public bool isComplex;
     public enum Shape {circle, square, triangle}
-    public enum ComplexShape { sphere, cone, cylinder, cube, prism, pyramid}
     [SerializeField] private bool grabbable = true;
     [SerializeField] private Shape sh;
-    [SerializeField] private ComplexShape csh;
     [SerializeField] int shapeID;
+
     public int GetShapeID()
     {
         return shapeID;
@@ -32,9 +31,9 @@ public class PuzzleObject : MonoBehaviour
     {
         shapeID = x;
     }
-    public void SetComplexShapeEnum(ComplexShape e)
+    public bool GetComplexShape()
     {
-        csh = e;
+        return isComplex;
     }
 
 }
