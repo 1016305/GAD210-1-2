@@ -7,7 +7,7 @@ using UnityEngine;
 public class ColorCombiner : MonoBehaviour
 {
     Material[,] intArray = new Material[3, 3];
-    GameObject[] CubesIn = new GameObject[2];
+    [SerializeField] GameObject[] CubesIn = new GameObject[2];
     [SerializeField] UnityEngine.Object CubeShape;
     [SerializeField] Material[] materialArray = new Material[6];
     private void Start()
@@ -35,6 +35,7 @@ public class ColorCombiner : MonoBehaviour
                 int x = CubesIn[0].GetComponent<PuzzleObject>().GetShapeID();
                 int y = CubesIn[1].GetComponent<PuzzleObject>().GetShapeID();
                 Debug.Log(intArray[x, y].name);
+                Debug.Log(x + "" + y);
                 CreateObjectWithMaterial(intArray[x, y]);
                 ResetObject(x, y);
             }
@@ -53,6 +54,14 @@ public class ColorCombiner : MonoBehaviour
         intArray[2, 0] = materialArray[5];
         intArray[2, 1] = materialArray[3];
         intArray[2, 2] = materialArray[2];
+
+        //ArrayGuide
+        // 0 = Red
+        // 1 = Blue
+        // 2 = Yellow
+        // 3 = Green
+        // 4 = Purple
+        // 5 = Orange
     }
     void CreateObjectWithMaterial(Material newMat)
     {
@@ -66,12 +75,16 @@ public class ColorCombiner : MonoBehaviour
     {
         GameObject newCube1;
         GameObject newCube2;
+
         newCube1 = Instantiate(CubeShape, new Vector3(-2,0,0), Quaternion.identity) as GameObject;
         newCube1.GetComponent<Renderer>().material = materialArray[x];
         newCube1.GetComponent<PuzzleObject>().SetShapeID(x);
+        Debug.Log(x);
+
         newCube2 = Instantiate(CubeShape, new Vector3(2, 0, 0), Quaternion.identity) as GameObject;
         newCube2.GetComponent<Renderer>().material = materialArray[y];
-        newCube1.GetComponent<PuzzleObject>().SetShapeID(y);
+        newCube2.GetComponent<PuzzleObject>().SetShapeID(y);
+        Debug.Log(y);
 
         Destroy(CubesIn[0]);
         Destroy(CubesIn[1]);
