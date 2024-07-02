@@ -88,10 +88,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0f2f318298d62f47ad018f5768f65b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isComplex: 0
+  isComplex: 1
   grabbable: 1
   sh: 0
-  shapeID: 0
+  shapeID: 5
 --- !u!54 &-6439748292950542175
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -37,7 +37,7 @@ public class ColorCombiner : MonoBehaviour
                 Debug.Log(intArray[x, y].name);
                 Debug.Log(x + "" + y);
                 CreateObjectWithMaterial(intArray[x, y]);
-                ResetObject(x, y);
+                ResetObject();
             }
         }
     }
@@ -71,23 +71,12 @@ public class ColorCombiner : MonoBehaviour
         Debug.Log(newMat);
         newCube.GetComponent<PuzzleObject>().SetShapeID(Array.IndexOf(materialArray, newMat));
     }
-    void ResetObject(int x, int y)
+    void ResetObject()
     {
-        GameObject newCube1;
-        GameObject newCube2;
 
-        newCube1 = Instantiate(CubeShape, new Vector3(-2,0,0), Quaternion.identity) as GameObject;
-        newCube1.GetComponent<Renderer>().material = materialArray[x];
-        newCube1.GetComponent<PuzzleObject>().SetShapeID(x);
-        Debug.Log(x);
+        CubesIn[0].gameObject.GetComponent<PuzzleObject>().ReturnToStart();
+        CubesIn[1].gameObject.GetComponent<PuzzleObject>().ReturnToStart();
 
-        newCube2 = Instantiate(CubeShape, new Vector3(2, 0, 0), Quaternion.identity) as GameObject;
-        newCube2.GetComponent<Renderer>().material = materialArray[y];
-        newCube2.GetComponent<PuzzleObject>().SetShapeID(y);
-        Debug.Log(y);
-
-        Destroy(CubesIn[0]);
-        Destroy(CubesIn[1]);
         CubesIn[0] = null;
         CubesIn[1] = null;
     }

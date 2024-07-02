@@ -10,6 +10,13 @@ public class PuzzleObject : MonoBehaviour
     [SerializeField] private bool grabbable = true;
     [SerializeField] private Shape sh;
     [SerializeField] int shapeID;
+    [SerializeField] int materialID;
+    private Vector3 startPos;
+
+    private void Start()
+    {
+        startPos = transform.position;
+    }
 
     public int GetShapeID()
     {
@@ -34,6 +41,18 @@ public class PuzzleObject : MonoBehaviour
     public bool GetComplexShape()
     {
         return isComplex;
+    }
+    public void ReturnToStart()
+    {
+        transform.position = startPos;
+    }
+    public void SetMaterialID(int matID)
+    {
+        materialID = matID;
+    }
+    public int GetMaterialID()
+    {
+        return materialID;
     }
 
 }

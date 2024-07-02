@@ -32,6 +32,14 @@ public class ShapeAndColorCombiner : MonoBehaviour
     //8 Prism
     //9 Pyramid  
 
+    //ColorArrayKey
+    //0 Red
+    //1 Blue
+    //2 Yellow
+    //3 Green
+    //4 Purple
+    //5 Orange
+
 
     Dictionary<PuzzleObject.Shape, int> shapeTable = new Dictionary<PuzzleObject.Shape, int>();
     private void Start()
@@ -64,6 +72,12 @@ public class ShapeAndColorCombiner : MonoBehaviour
         outShapes[2, 0] = allShapes[5];
         outShapes[2, 1] = allShapes[3];
         outShapes[2, 2] = allShapes[2];
+        //0 Sphere
+        //1 Cube
+        //2 Pyramid
+        //3 Prim
+        //4 Cylinder
+        //5 Cone
     }
     void LoadColoursArray()
     {
@@ -90,13 +104,13 @@ public class ShapeAndColorCombiner : MonoBehaviour
             if (shapesIn[0] == null)
             {
                 shapesIn[0] = shapeIn;
-                shapeIn.GetComponent<PuzzleObject>().SetGrabbale(false);
+                
                 return false;
             }
             else if (shapesIn[1] == null)
             {
                 shapesIn[1] = shapeIn;
-                shapeIn.GetComponent<PuzzleObject>().SetGrabbale(false);
+                
                 
                 return true;
             }
@@ -117,7 +131,7 @@ public class ShapeAndColorCombiner : MonoBehaviour
 
             shapeTable.TryGetValue(shape1, out x);
             shapeTable.TryGetValue(shape2, out y);
-            newShape = Instantiate(outShapes[x, y]) as GameObject;
+            newShape = Instantiate(outShapes[x, y], Vector3.zero, Quaternion.identity) as GameObject;
             newShape.GetComponent<MeshCollider>().convex = true;
         }
         else if (isBothColorAndShape)
@@ -126,27 +140,20 @@ public class ShapeAndColorCombiner : MonoBehaviour
             Material newMat;
 
             colorX = shapesIn[0].GetComponent<PuzzleObject>().GetShapeID();
-            colorY = shapesIn[0].GetComponent<PuzzleObject>().GetShapeID();
+            colorY = shapesIn[1].GetComponent<PuzzleObject>().GetShapeID();
             newMat = intArray[colorX, colorY];
             shapeTable.TryGetValue(shape1, out x);
             shapeTable.TryGetValue(shape2, out y);
-            newShape = Instantiate(outShapes[x, y]) as GameObject;
+            newShape = Instantiate(outShapes[x, y], Vector3.zero, Quaternion.identity) as GameObject;
             newShape.GetComponent<MeshCollider>().convex = true;
             newShape.GetComponent<Renderer>().material = newMat;
+            newShape.GetComponent<PuzzleObject>().SetMaterialID(Array.IndexOf(materialArray, newMat));
         }
     }
     void ReloadShapes()
     {
-        GameObject reloadShape1;
-        GameObject reloadShape2;
-        Destroy(shapesIn[0]);
-        Destroy(shapesIn[1]);
-        reloadShape1 = Instantiate(shapesIn[0], new Vector3(-3.5f, 0f, 0f), Quaternion.identity);
-        reloadShape2 = Instantiate(shapesIn[1], new Vector3(3.5f, 0f, 0f), Quaternion.identity);
-        reloadShape1.GetComponent<PuzzleObject>().SetGrabbale(true);
-        reloadShape2.GetComponent<PuzzleObject>().SetGrabbale(true);
-        reloadShape1.transform.rotation = Quaternion.Euler(90f, 0, 0);
-        reloadShape2.transform.rotation = Quaternion.Euler(90f, 0, 0);
+        shapesIn[0].gameObject.GetComponent<PuzzleObject>().ReturnToStart();
+        shapesIn[1].gameObject.GetComponent<PuzzleObject>().ReturnToStart();
         shapesIn[0] = null;
         shapesIn[1] = null;
     }

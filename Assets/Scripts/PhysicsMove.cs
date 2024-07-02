@@ -20,7 +20,7 @@ public class PhysicsMove : MonoBehaviour
     }
     void ClickToRaycast()
     {
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && PO == null)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -40,20 +40,21 @@ public class PhysicsMove : MonoBehaviour
                 }
             }
         }
-        else
+        //else
+        //{
+        //    if (PO == null)
+        //    {
+        //        return;
+        //    }
+        //    else
+        //    {
+        //        PO.GetComponent<Rigidbody>().useGravity = true;
+        //        PO.transform.parent = null;
+        //    }
+        //}
+        if (!Input.GetMouseButton(0) && PO != null)
         {
-            if (PO == null)
-            {
-                return;
-            }
-            else
-            {
-                PO.GetComponent<Rigidbody>().useGravity = true;
-                PO.transform.parent = null;
-            }
-        }
-        if (!Input.GetMouseButton(0))
-        {
+            PO.GetComponent<Rigidbody>().useGravity = true;
             PO.transform.parent = null;
             PO = null;
 
