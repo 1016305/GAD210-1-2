@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -24,9 +25,16 @@ public class UIManager : MonoBehaviour
     }
     public void GoToNextScene()
     {
-        SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
-        SceneManager.LoadScene(sceneIndex);
-        
+        if (sceneIndex != 4)
+        {
+            SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
+            SceneManager.LoadScene(sceneIndex);
+        }
+        if (sceneIndex == 4)
+        {
+            Application.Quit();
+            UnityEditor.EditorApplication.isPlaying = false;
+        }
     }
 
 }
